@@ -3,8 +3,8 @@
     {
       "id": "startAgentflow_0",
       "position": {
-        "x": -400,
-        "y": 0
+        "x": -100,
+        "y": 100
       },
       "type": "agentFlow",
       "data": {
@@ -37,43 +37,10 @@
             ],
             "default": "chatInput",
             "id": "startAgentflow_0-input-startInputType"
-          },
-          {
-            "label": "Form Title",
-            "name": "formTitle",
-            "type": "string",
-            "optional": true,
-            "show": {
-              "startInputType": "formInput"
-            },
-            "id": "startAgentflow_0-input-formTitle"
-          },
-          {
-            "label": "Form Description",
-            "name": "formDescription",
-            "type": "string",
-            "optional": true,
-            "show": {
-              "startInputType": "formInput"
-            },
-            "id": "startAgentflow_0-input-formDescription"
-          },
-          {
-            "label": "Form Input Fields",
-            "name": "formInputFields",
-            "type": "array",
-            "optional": true,
-            "show": {
-              "startInputType": "formInput"
-            },
-            "id": "startAgentflow_0-input-formInputFields"
           }
         ],
         "inputs": {
-          "startInputType": "chatInput",
-          "formTitle": "",
-          "formDescription": "",
-          "formInputFields": []
+          "startInputType": "chatInput"
         },
         "outputAnchors": [
           {
@@ -88,8 +55,8 @@
     {
       "id": "agentAgentflow_0",
       "position": {
-        "x": -150,
-        "y": -50
+        "x": 300,
+        "y": 100
       },
       "type": "agentFlow",
       "data": {
@@ -343,8 +310,8 @@
     {
       "id": "agentAgentflow_1",
       "position": {
-        "x": 150,
-        "y": -50
+        "x": 700,
+        "y": 100
       },
       "type": "agentFlow",
       "data": {
@@ -598,8 +565,8 @@
     {
       "id": "agentAgentflow_2",
       "position": {
-        "x": 450,
-        "y": -50
+        "x": 1100,
+        "y": 100
       },
       "type": "agentFlow",
       "data": {
@@ -853,8 +820,8 @@
     {
       "id": "agentAgentflow_3",
       "position": {
-        "x": 750,
-        "y": -50
+        "x": 1500,
+        "y": 100
       },
       "type": "agentFlow",
       "data": {
@@ -1159,10 +1126,5 @@
         "isHumanInput": false
       }
     }
-  ],
-  "viewport": {
-    "x": 0,
-    "y": 0,
-    "zoom": 0.75
-  }
+  ]
 }
