@@ -84,7 +84,8 @@ CLAUDE.md                                       # This file — project guidance
 workflows/                                      # Flowise flow JSON exports (import via Flowise UI)
   Proactive Retention agent Chatflow.json     # Chatflow — conversational retention demo (Tool Calling Agent + MCP + memory)
   Loan Decision Agentflow.json                # Agentflow — autonomous loan decision (4 Sequential Agents, single trigger)
-  Loan Agent Flow New Agents.json            # Agentflow — current version with 1 shared tool node (fixes MCP timeout)
+  Loan Agent Flow New Agents.json            # Agentflow — current version with agentTools wiring (fixes MCP timeout)
+  Denodo MCP Test Agentflow.json            # Agentflow — minimal single-agent test flow for validating MCP tool wiring
 agents/                                       # Agent system prompts
   retention-agent-system-prompt.md            # System prompt for the proactive retention agent (source of truth)
   loan-decision/                              # System prompts for the 4 loan decision sub-agents
@@ -93,8 +94,13 @@ agents/                                       # Agent system prompts
     property-analyst-prompt.md                # Agent 3: property valuation + LTV
     risk-synthesizer-prompt.md                # Agent 4: final decision + Loan Decision Brief
 demo/demo-script.md                           # 3-question demo walkthrough with talking points
+demo/demo-script-agentflow.md               # Demo script variant for the Agentflow (4-agent loan decision)
 demo/data-setup.sql                           # INSERT statements to seed Jane Doe demo data in the underlying DB
 docs/implementation_plan.md                   # Loan Decision Agentflow design and architecture
+docs/agentflow-tool-wiring-models.md        # How toolAgentflow vs agentTools wiring works — 3 models compared
+docs/tool-agent-vs-agent-tools.md          # Why toolAgentflow edge wiring hangs vs agentTools[] array wiring (with JSON diffs)
+docs/agent-tools-no-ui-workaround.md      # Workarounds for agentTools[] having no graphical UI in Flowise
+docs/crew-ai-vs-flowise.md                  # Comparison: CrewAI vs Flowise for multi-agent orchestration
 views.md                                      # Denodo view schemas (reference)
 ```
 
