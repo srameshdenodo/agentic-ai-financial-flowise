@@ -1,95 +1,110 @@
-# Agentflow Tool Wiring: Two Models
+# Agentflow Tool Wiring: Three Models
 
 ## The Problem We Solved
 
-During development we tried two different ways to connect Denodo MCP tools to agents
-in Flowise Agentflow. The first approach looked correct visually but silently failed.
-The second approach is how Flowise actually works.
+During development we tried three different ways to connect Denodo MCP tools to agents
+in Flowise Agentflow. The first two approaches looked correct visually but silently
+failed. The third approach is how Flowise actually works.
 
 ---
 
-## Model 1: `toolAgentflow` Edge (Wrong)
+## Model 1: `toolAgentflow` — 1-to-1 Per-Agent Tool Nodes (Wrong)
 
-### How it looked
+### What we built
+
+Four separate tool nodes, one per agent, with 1-to-1 edges. We also had
+agent-to-agent edges for sequential execution.
 
 ```
-Start → Credit Analyst → Payment Analyst → Property Analyst → Risk Synthesizer
-                                                                       ↓
-                                                               Credit Tools ❌
+Edges in the JSON:
+  agent0 → tool0      (Credit Tools)
+  agent1 → tool1      (Payment Tools)
+  agent2 → tool2      (Property Tools)
+  agent3 → tool3      (Rate Tools)
+
+  agent0 → agent1 → agent2 → agent3   (sequential)
 ```
 
-All agents ran green (succeeded), then a single tool node fired at the end and timed out.
+### What we expected
 
-### What we thought it meant
+```
+Credit Analyst → [calls Credit Tools] → Payment Analyst → [calls Payment Tools]
+               → Property Analyst → [calls Property Tools] → Risk Synthesizer
+               → [calls Rate Tools] → Loan Decision Brief
+```
 
-> Each agent is connected to a tool node via an edge. The agent calls the tool
-> during its LLM reasoning turn, gets the data back, then passes results forward.
+Each agent fires its tool, gets results, passes enriched context to the next agent.
 
-### What it actually means
+### What actually happened
 
-The `toolAgentflow` node is a **deterministic flow step** — it executes in the
-graph queue like any other node, after all its parent nodes complete. It has
-**no connection to the LLM's function-calling mechanism**. The agent's LLM runs
-first with zero tools available, produces output (hallucinated or empty), marks
-itself complete, then the tool node fires as a separate step with no way to feed
-results back to the agent that already finished.
+```
+Start → Credit Analyst ✅ → Payment Analyst ✅ → Property Analyst ✅ → Risk Synthesizer ✅
+                                                                              ↓
+                                                                      Credit Tools ❌
+```
+
+All agents ran green (no data), then only ONE tool fired at the very end and timed out.
+
+### Why execution order was wrong
+
+Flowise Agentflow uses a **dependency graph queue**. A node executes as soon as all
+its parent nodes have completed. Given our edges:
+
+- `agent1` depends on `agent0` → ready after agent0 completes
+- `tool0` also depends on `agent0` → also ready after agent0 completes
+- Both enter the queue at the same time, but `agent1` is processed first
+- `agent2` becomes ready after `agent1`, and so on
+
+So the actual execution order was:
+
+```
+agent0 → [agent1 and tool0 both queued] → agent1 runs first →
+[agent2 and tool1 both queued] → agent2 runs first → ... →
+all agents complete → tools run last
+```
+
+The tools always lost the race to the next agent. And even if a tool ran "between"
+agents, its output had no path back into the agent that had already finished.
 
 ### JSON shape
 
-The tool was a **separate node** in the `nodes` array, wired via **edges**:
-
 ```json
-// Node definition (sits alongside agents in the flow graph)
-{
-  "id": "toolAgentflow_0",
-  "type": "agentFlow",
-  "data": {
-    "name": "toolAgentflow",
-    "label": "Credit Tools",
-    "inputs": {
-      "toolAgentflowSelectedTool": "customMCP",
-      "toolAgentflowSelectedToolConfig": {
-        "mcpServerConfig": "{\"url\":\"...\",\"headers\":{...}}",
-        "mcpActions": "[\"denodo_verticals_query_financial_customers\"]"
-      },
-      "toolInputArgs": [],
-      "toolUpdateState": []
-    }
-  }
-}
+// 4 separate tool nodes in the nodes array
+{ "id": "toolAgentflow_0", "data": { "name": "toolAgentflow", "label": "Credit Tools", ... } }
+{ "id": "toolAgentflow_1", "data": { "name": "toolAgentflow", "label": "Payment Tools", ... } }
+{ "id": "toolAgentflow_2", "data": { "name": "toolAgentflow", "label": "Property Tools", ... } }
+{ "id": "toolAgentflow_3", "data": { "name": "toolAgentflow", "label": "Rate Tools", ... } }
 
-// Agent node — agentTools is EMPTY
-{
-  "id": "agentAgentflow_0",
-  "data": {
-    "name": "agentAgentflow",
-    "inputs": {
-      "agentTools": [],        // ← LLM has NO tools during reasoning
-      ...
-    }
-  }
-}
-
-// Edge connecting agent → tool (defines flow order only)
-{
-  "id": "agentAgentflow_0-toolAgentflow_0",
-  "source": "agentAgentflow_0",
-  "target": "toolAgentflow_0",
-  "type": "agentFlow"
-}
+// 8 edges total: 4 agent→agent + 4 agent→tool
+{ "source": "agentAgentflow_0", "target": "agentAgentflow_1" }
+{ "source": "agentAgentflow_1", "target": "agentAgentflow_2" }
+{ "source": "agentAgentflow_2", "target": "agentAgentflow_3" }
+{ "source": "agentAgentflow_0", "target": "toolAgentflow_0" }
+{ "source": "agentAgentflow_1", "target": "toolAgentflow_1" }
+{ "source": "agentAgentflow_2", "target": "toolAgentflow_2" }
+{ "source": "agentAgentflow_3", "target": "toolAgentflow_3" }
 ```
-
-### Why it timed out
-
-With 4 tool nodes each initializing their own MCP connection, the StreamableHTTP
-handshake overhead (before falling back to SSE) burned through the 60-second
-timeout before any real query ran. Even after consolidating to 1 shared tool
-node, the fundamental problem remained: agents never called tools, and the single
-tool node fired at the end with no arguments.
 
 ---
 
-## Model 2: `agentTools` Array (Correct)
+## Model 1b: Shared `toolAgentflow` Node (Also Wrong)
+
+To reduce MCP connection overhead, we consolidated to a single tool node wired to
+all 4 agents, hoping one shared node would be available to each during their turn.
+
+```
+Edges: all 4 agents → toolAgentflow_0 (shared)
+       agent0 → agent1 → agent2 → agent3 (sequential)
+```
+
+Same problem, worse result. All agents still ran without tools, then the single
+shared tool node fired once at the end and timed out. Sharing didn't change the
+execution model — it just meant only one tool entry appeared in the execution tree
+instead of four.
+
+---
+
+## Model 3: `agentTools` Array (Correct)
 
 ### How it looks
 
@@ -147,17 +162,17 @@ No edges to tool nodes. No tool nodes at all.
 
 ## Side-by-Side Comparison
 
-| Aspect | `toolAgentflow` edge | `agentTools` array |
-|---|---|---|
-| Where tool config lives | Separate node in flow graph | Inside agent's `inputs` |
-| Connected via | Edge (`source → target`) | JSON array in agent inputs |
-| When tool executes | After agent completes (flow step) | During agent's LLM turn (inline) |
-| LLM sees tool? | No | Yes (as function-calling schema) |
-| Result fed back to LLM? | No | Yes |
-| Visible in Flowise canvas? | Yes — as a node with a wire | No — embedded, not visualized |
-| Configurable in Flowise UI? | Yes | Partially (tool type visible, inner config opaque) |
-| Works for autonomous agents? | No | Yes |
-| Use case | Deterministic tool call with hardcoded args as a pipeline step | LLM-driven tool calling where the model decides when and how to call |
+| Aspect | Model 1: 1-to-1 tool nodes | Model 1b: shared tool node | Model 2: `agentTools` array |
+|---|---|---|---|
+| Tool config lives in | Separate nodes in graph | Single shared node | Inside each agent's `inputs` |
+| Connected via | Edges (agent → tool) | Edges (all agents → 1 tool) | JSON array in agent inputs |
+| Nodes in JSON | 4 agents + 4 tools = 8 | 4 agents + 1 tool = 5 | 4 agents only = 4 |
+| Execution order | All agents first, tools after | All agents first, tool last | Tool called inline per agent |
+| LLM sees tool? | No | No | Yes (function-calling schema) |
+| Result fed back to LLM? | No | No | Yes |
+| Visible on canvas? | Yes — wired nodes | Yes — wired node | No — embedded |
+| Works for autonomous agents? | No | No | Yes |
+| Timeout risk | High (4 MCP inits at end) | Lower (1 MCP init) but still fails | None (connection per agent turn, lazy) |
 
 ---
 
