@@ -1,0 +1,1168 @@
+{
+  "nodes": [
+    {
+      "id": "startAgentflow_0",
+      "position": {
+        "x": -400,
+        "y": 0
+      },
+      "type": "agentFlow",
+      "data": {
+        "id": "startAgentflow_0",
+        "label": "Start",
+        "version": 1.1,
+        "name": "startAgentflow",
+        "type": "Start",
+        "color": "#7EE787",
+        "category": "Agent Flows",
+        "baseClasses": [
+          "Start"
+        ],
+        "description": "Starting point of the agentflow",
+        "inputAnchors": [],
+        "inputParams": [
+          {
+            "label": "Input Type",
+            "name": "startInputType",
+            "type": "options",
+            "options": [
+              {
+                "label": "Chat Input",
+                "name": "chatInput"
+              },
+              {
+                "label": "Form Input",
+                "name": "formInput"
+              }
+            ],
+            "default": "chatInput",
+            "id": "startAgentflow_0-input-startInputType"
+          },
+          {
+            "label": "Form Title",
+            "name": "formTitle",
+            "type": "string",
+            "optional": true,
+            "show": {
+              "startInputType": "formInput"
+            },
+            "id": "startAgentflow_0-input-formTitle"
+          },
+          {
+            "label": "Form Description",
+            "name": "formDescription",
+            "type": "string",
+            "optional": true,
+            "show": {
+              "startInputType": "formInput"
+            },
+            "id": "startAgentflow_0-input-formDescription"
+          },
+          {
+            "label": "Form Input Fields",
+            "name": "formInputFields",
+            "type": "array",
+            "optional": true,
+            "show": {
+              "startInputType": "formInput"
+            },
+            "id": "startAgentflow_0-input-formInputFields"
+          }
+        ],
+        "inputs": {
+          "startInputType": "chatInput",
+          "formTitle": "",
+          "formDescription": "",
+          "formInputFields": []
+        },
+        "outputAnchors": [
+          {
+            "id": "startAgentflow_0-output-startAgentflow",
+            "label": "Start",
+            "name": "startAgentflow"
+          }
+        ],
+        "hideInput": true
+      }
+    },
+    {
+      "id": "agentAgentflow_0",
+      "position": {
+        "x": -150,
+        "y": -50
+      },
+      "type": "agentFlow",
+      "data": {
+        "id": "agentAgentflow_0",
+        "label": "Credit Analyst",
+        "version": 3.2,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "category": "Agent Flows",
+        "baseClasses": [
+          "Agent"
+        ],
+        "description": "Agent that can use tools and memory to perform tasks",
+        "inputAnchors": [],
+        "inputParams": [
+          {
+            "label": "Agent Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_0-input-agentModel"
+          },
+          {
+            "label": "Agent Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_0-input-agentMessages"
+          },
+          {
+            "label": "Built-In OpenAI Tools",
+            "name": "agentToolsBuiltInOpenAI",
+            "type": "multiOptions",
+            "options": [
+              {
+                "label": "Web Search Preview",
+                "name": "web_search_preview"
+              },
+              {
+                "label": "Code Interpreter",
+                "name": "code_interpreter"
+              },
+              {
+                "label": "Image Generation",
+                "name": "image_generation"
+              }
+            ],
+            "optional": true,
+            "show": {
+              "agentModel": "chatOpenAI"
+            },
+            "id": "agentAgentflow_0-input-agentToolsBuiltInOpenAI"
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentTools"
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentKnowledgeDocumentStores"
+          },
+          {
+            "label": "Knowledge (Vector Store Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentKnowledgeVSEmbeddings"
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "default": true,
+            "id": "agentAgentflow_0-input-agentEnableMemory"
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer"
+              }
+            ],
+            "default": "allMessages",
+            "id": "agentAgentflow_0-input-agentMemoryType"
+          },
+          {
+            "label": "User Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_0-input-agentUserMessage"
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_0-input-agentReturnResponseAs"
+          },
+          {
+            "label": "Structured Output",
+            "name": "agentStructuredOutput",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentStructuredOutput"
+          },
+          {
+            "label": "Update State",
+            "name": "agentUpdateState",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_0-input-agentUpdateState"
+          }
+        ],
+        "inputs": {
+          "agentModel": "chatOpenAI",
+          "agentMessages": [],
+          "agentToolsBuiltInOpenAI": [],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\"url\":\"http://host.docker.internal:8080/verticals/mcp\",\"headers\":{\"Authorization\":\"Basic YWRtaW46YWRtaW4=\",\"Accept\":\"application/json, text/event-stream\"}}",
+                "mcpActions": "[\"denodo_verticals_query_financial_customers\",\"denodo_verticals_query_financial_loans\",\"denodo_verticals_query_financial_underwriting\"]"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [],
+          "agentEnableMemory": true,
+          "agentMemoryType": "allMessages",
+          "agentUserMessage": "You are the Credit Analyst agent in an autonomous loan decision workflow.\nYour job is to assess the creditworthiness of a specific customer using real-time data from Denodo.\n\n## Your Scope\nYou handle ONLY credit assessment. Do not assess payments, property, or make a final decision.\n\n## Your Task\nExtract the customer_id from the conversation (e.g. 20000), then run these steps:\n\nStep 1 - Call query_financial_customers with:\n  where_clause: \"customer_id\" = CUSTOMER_ID\n\nStep 2 - From the result, note the loan details. Then call query_financial_loans with:\n  where_clause: \"customer_id\" = CUSTOMER_ID\n\nStep 3 - From the loan result, note the loan_id. Then call query_financial_underwriting with:\n  where_clause: \"loan_id\" = LOAN_ID\n\nReplace CUSTOMER_ID and LOAN_ID with the actual values.\nNote: Always wrap column names in double quotes in where_clause (e.g. \"customer_id\" = 20000).\n\n## Credit Score Bands\n800+    -> Excellent\n740-799 -> Good\n670-739 -> Fair\n<670    -> Poor\n\n## Output Format\nEnd your turn with this exact block (all values from tool results only):\n\nCREDIT_ANALYSIS:\n  customer_id:        [value]\n  full_name:          [first_name last_name]\n  credit_score:       [value] ([band])\n  employment_history: [value]\n  financial_history:  [value]\n  loyalty_tier:       [loyalty_classification]\n  income_band:        [income_band]\n  risk_weighting:     [risk_weighting]\n  loan_amount:        [loan_amount]\n  interest_rate:      [interest_rate]\n  credit_verdict:     [STRONG / ACCEPTABLE / WEAK / INSUFFICIENT_DATA]\n\n## Hard Rules\n- Never fabricate data. Every value must come from a tool result.\n- If data is missing, set credit_verdict to INSUFFICIENT_DATA and explain.\n- Temperature is 0.",
+          "agentReturnResponseAs": "userMessage",
+          "agentStructuredOutput": [],
+          "agentUpdateState": [],
+          "cache": "",
+          "modelName": "gpt-4o",
+          "temperature": "0",
+          "streaming": true,
+          "allowImageUploads": "",
+          "reasoning": false,
+          "reasoningEffort": "medium",
+          "reasoningSummary": "auto",
+          "maxTokens": "",
+          "topP": "",
+          "frequencyPenalty": "",
+          "presencePenalty": "",
+          "timeout": "",
+          "strictToolCalling": "",
+          "stopSequence": "",
+          "basepath": "",
+          "baseOptions": "",
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "gpt-4o",
+            "temperature": "0",
+            "streaming": true,
+            "allowImageUploads": "",
+            "reasoning": false,
+            "reasoningEffort": "medium",
+            "reasoningSummary": "auto",
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "strictToolCalling": "",
+            "stopSequence": "",
+            "basepath": "",
+            "baseOptions": "",
+            "agentModel": "chatOpenAI"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_0-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "credential": "15acbf28-1c2b-4ea4-b596-c6dcb11a6cb9"
+      }
+    },
+    {
+      "id": "agentAgentflow_1",
+      "position": {
+        "x": 150,
+        "y": -50
+      },
+      "type": "agentFlow",
+      "data": {
+        "id": "agentAgentflow_1",
+        "label": "Payment History Analyst",
+        "version": 3.2,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "category": "Agent Flows",
+        "baseClasses": [
+          "Agent"
+        ],
+        "description": "Agent that can use tools and memory to perform tasks",
+        "inputAnchors": [],
+        "inputParams": [
+          {
+            "label": "Agent Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_1-input-agentModel"
+          },
+          {
+            "label": "Agent Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_1-input-agentMessages"
+          },
+          {
+            "label": "Built-In OpenAI Tools",
+            "name": "agentToolsBuiltInOpenAI",
+            "type": "multiOptions",
+            "options": [
+              {
+                "label": "Web Search Preview",
+                "name": "web_search_preview"
+              },
+              {
+                "label": "Code Interpreter",
+                "name": "code_interpreter"
+              },
+              {
+                "label": "Image Generation",
+                "name": "image_generation"
+              }
+            ],
+            "optional": true,
+            "show": {
+              "agentModel": "chatOpenAI"
+            },
+            "id": "agentAgentflow_1-input-agentToolsBuiltInOpenAI"
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentTools"
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentKnowledgeDocumentStores"
+          },
+          {
+            "label": "Knowledge (Vector Store Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentKnowledgeVSEmbeddings"
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "default": true,
+            "id": "agentAgentflow_1-input-agentEnableMemory"
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer"
+              }
+            ],
+            "default": "allMessages",
+            "id": "agentAgentflow_1-input-agentMemoryType"
+          },
+          {
+            "label": "User Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_1-input-agentUserMessage"
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_1-input-agentReturnResponseAs"
+          },
+          {
+            "label": "Structured Output",
+            "name": "agentStructuredOutput",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentStructuredOutput"
+          },
+          {
+            "label": "Update State",
+            "name": "agentUpdateState",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_1-input-agentUpdateState"
+          }
+        ],
+        "inputs": {
+          "agentModel": "chatOpenAI",
+          "agentMessages": [],
+          "agentToolsBuiltInOpenAI": [],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\"url\":\"http://host.docker.internal:8080/verticals/mcp\",\"headers\":{\"Authorization\":\"Basic YWRtaW46YWRtaW4=\",\"Accept\":\"application/json, text/event-stream\"}}",
+                "mcpActions": "[\"denodo_verticals_query_financial_loans\",\"denodo_verticals_query_financial_payments\"]"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [],
+          "agentEnableMemory": true,
+          "agentMemoryType": "allMessages",
+          "agentUserMessage": "You are the Payment History Analyst agent in an autonomous loan decision workflow.\nYour job is to assess payment reliability and existing debt obligations using real-time data from Denodo.\n\n## Your Scope\nYou handle ONLY payment history and debt load. Do not repeat credit work.\n\n## Your Task\nThe customer_id is in the conversation context from the CREDIT_ANALYSIS block.\n\nStep 1 - Call query_financial_loans with:\n  where_clause: \"customer_id\" = CUSTOMER_ID\n\nStep 2 - From the result, note the loan_id(s). Then call query_financial_payments with:\n  where_clause: \"loan_id\" = LOAN_ID\n\nReplace CUSTOMER_ID and LOAN_ID with the actual values.\nNote: Always wrap column names in double quotes in where_clause (e.g. \"customer_id\" = 20000).\n\n## Assessment Rules\n0 missed/late payments   -> Reliable\n1-2 missed payments      -> Minor Concerns\n3+ missed payments       -> High Risk\nNo payment records found -> INSUFFICIENT_DATA\n\n## Output Format\nEnd your turn with this exact block:\n\nPAYMENT_ANALYSIS:\n  customer_id:          [value]\n  total_loans:          [count]\n  total_debt_exposure:  [sum of loan_amount]\n  active_loans:         [count with status active or approved]\n  missed_payments:      [count or UNKNOWN if no payment data]\n  payment_reliability:  [Reliable / Minor Concerns / High Risk / INSUFFICIENT_DATA]\n  dti_flag:             [LOW / MEDIUM / HIGH / UNKNOWN]\n  payment_verdict:      [STRONG / ACCEPTABLE / WEAK / INSUFFICIENT_DATA]\n\n## Hard Rules\n- Never fabricate data. Every value must come from a tool result.\n- If payment data is unavailable, set payment_verdict to INSUFFICIENT_DATA.\n- Temperature is 0.",
+          "agentReturnResponseAs": "userMessage",
+          "agentStructuredOutput": [],
+          "agentUpdateState": [],
+          "cache": "",
+          "modelName": "gpt-4o",
+          "temperature": "0",
+          "streaming": true,
+          "allowImageUploads": "",
+          "reasoning": false,
+          "reasoningEffort": "medium",
+          "reasoningSummary": "auto",
+          "maxTokens": "",
+          "topP": "",
+          "frequencyPenalty": "",
+          "presencePenalty": "",
+          "timeout": "",
+          "strictToolCalling": "",
+          "stopSequence": "",
+          "basepath": "",
+          "baseOptions": "",
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "gpt-4o",
+            "temperature": "0",
+            "streaming": true,
+            "allowImageUploads": "",
+            "reasoning": false,
+            "reasoningEffort": "medium",
+            "reasoningSummary": "auto",
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "strictToolCalling": "",
+            "stopSequence": "",
+            "basepath": "",
+            "baseOptions": "",
+            "agentModel": "chatOpenAI"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_1-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "credential": "15acbf28-1c2b-4ea4-b596-c6dcb11a6cb9"
+      }
+    },
+    {
+      "id": "agentAgentflow_2",
+      "position": {
+        "x": 450,
+        "y": -50
+      },
+      "type": "agentFlow",
+      "data": {
+        "id": "agentAgentflow_2",
+        "label": "Property Analyst",
+        "version": 3.2,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "category": "Agent Flows",
+        "baseClasses": [
+          "Agent"
+        ],
+        "description": "Agent that can use tools and memory to perform tasks",
+        "inputAnchors": [],
+        "inputParams": [
+          {
+            "label": "Agent Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_2-input-agentModel"
+          },
+          {
+            "label": "Agent Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_2-input-agentMessages"
+          },
+          {
+            "label": "Built-In OpenAI Tools",
+            "name": "agentToolsBuiltInOpenAI",
+            "type": "multiOptions",
+            "options": [
+              {
+                "label": "Web Search Preview",
+                "name": "web_search_preview"
+              },
+              {
+                "label": "Code Interpreter",
+                "name": "code_interpreter"
+              },
+              {
+                "label": "Image Generation",
+                "name": "image_generation"
+              }
+            ],
+            "optional": true,
+            "show": {
+              "agentModel": "chatOpenAI"
+            },
+            "id": "agentAgentflow_2-input-agentToolsBuiltInOpenAI"
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentTools"
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentKnowledgeDocumentStores"
+          },
+          {
+            "label": "Knowledge (Vector Store Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentKnowledgeVSEmbeddings"
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "default": true,
+            "id": "agentAgentflow_2-input-agentEnableMemory"
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer"
+              }
+            ],
+            "default": "allMessages",
+            "id": "agentAgentflow_2-input-agentMemoryType"
+          },
+          {
+            "label": "User Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_2-input-agentUserMessage"
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_2-input-agentReturnResponseAs"
+          },
+          {
+            "label": "Structured Output",
+            "name": "agentStructuredOutput",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentStructuredOutput"
+          },
+          {
+            "label": "Update State",
+            "name": "agentUpdateState",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_2-input-agentUpdateState"
+          }
+        ],
+        "inputs": {
+          "agentModel": "chatOpenAI",
+          "agentMessages": [],
+          "agentToolsBuiltInOpenAI": [],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\"url\":\"http://host.docker.internal:8080/verticals/mcp\",\"headers\":{\"Authorization\":\"Basic YWRtaW46YWRtaW4=\",\"Accept\":\"application/json, text/event-stream\"}}",
+                "mcpActions": "[\"denodo_verticals_query_financial_loans\",\"denodo_verticals_query_financial_properties\"]"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [],
+          "agentEnableMemory": true,
+          "agentMemoryType": "allMessages",
+          "agentUserMessage": "You are the Property Analyst agent in an autonomous loan decision workflow.\nYour job is to assess collateral quality using property data from Denodo.\n\n## Your Scope\nYou handle ONLY property and collateral assessment. Do not repeat credit or payment work.\n\n## Your Task\nThe customer_id is in the conversation context from the CREDIT_ANALYSIS block.\n\nStep 1 - Call query_financial_loans with:\n  where_clause: \"customer_id\" = CUSTOMER_ID\n\nStep 2 - From the result, note the property_id. Then call query_financial_properties with:\n  where_clause: \"property_id\" = PROPERTY_ID\n\nReplace CUSTOMER_ID and PROPERTY_ID with the actual values.\nNote: Always wrap column names in double quotes in where_clause (e.g. \"customer_id\" = 20000).\n\nStep 3 - Calculate LTV: (loan_amount / property_value) * 100\n\n## LTV Risk Bands\n< 70%  -> LOW risk\n70-90% -> MEDIUM risk\n> 90%  -> HIGH risk\n\n## Output Format\nEnd your turn with this exact block:\n\nPROPERTY_ANALYSIS:\n  customer_id:       [value]\n  loan_amount:       [value]\n  property_value:    [value or UNKNOWN]\n  ltv_ratio:         [calculated % or UNKNOWN]\n  ltv_risk:          [LOW / MEDIUM / HIGH / UNKNOWN]\n  collateral_rating: [STRONG / ACCEPTABLE / WEAK / INSUFFICIENT_DATA]\n  property_verdict:  [STRONG / ACCEPTABLE / WEAK / INSUFFICIENT_DATA]\n\n## Hard Rules\n- Never fabricate data. Every value must come from a tool result.\n- If property data is missing, set property_verdict to INSUFFICIENT_DATA.\n- Temperature is 0.",
+          "agentReturnResponseAs": "userMessage",
+          "agentStructuredOutput": [],
+          "agentUpdateState": [],
+          "cache": "",
+          "modelName": "gpt-4o",
+          "temperature": "0",
+          "streaming": true,
+          "allowImageUploads": "",
+          "reasoning": false,
+          "reasoningEffort": "medium",
+          "reasoningSummary": "auto",
+          "maxTokens": "",
+          "topP": "",
+          "frequencyPenalty": "",
+          "presencePenalty": "",
+          "timeout": "",
+          "strictToolCalling": "",
+          "stopSequence": "",
+          "basepath": "",
+          "baseOptions": "",
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "gpt-4o",
+            "temperature": "0",
+            "streaming": true,
+            "allowImageUploads": "",
+            "reasoning": false,
+            "reasoningEffort": "medium",
+            "reasoningSummary": "auto",
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "strictToolCalling": "",
+            "stopSequence": "",
+            "basepath": "",
+            "baseOptions": "",
+            "agentModel": "chatOpenAI"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_2-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "credential": "15acbf28-1c2b-4ea4-b596-c6dcb11a6cb9"
+      }
+    },
+    {
+      "id": "agentAgentflow_3",
+      "position": {
+        "x": 750,
+        "y": -50
+      },
+      "type": "agentFlow",
+      "data": {
+        "id": "agentAgentflow_3",
+        "label": "Risk Synthesizer",
+        "version": 3.2,
+        "name": "agentAgentflow",
+        "type": "Agent",
+        "color": "#4DD0E1",
+        "category": "Agent Flows",
+        "baseClasses": [
+          "Agent"
+        ],
+        "description": "Agent that can use tools and memory to perform tasks",
+        "inputAnchors": [],
+        "inputParams": [
+          {
+            "label": "Agent Model",
+            "name": "agentModel",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "loadConfig": true,
+            "id": "agentAgentflow_3-input-agentModel"
+          },
+          {
+            "label": "Agent Messages",
+            "name": "agentMessages",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              {
+                "label": "Role",
+                "name": "role",
+                "type": "options",
+                "options": [
+                  {
+                    "label": "System",
+                    "name": "system"
+                  },
+                  {
+                    "label": "User",
+                    "name": "user"
+                  },
+                  {
+                    "label": "Assistant",
+                    "name": "assistant"
+                  }
+                ]
+              },
+              {
+                "label": "Content",
+                "name": "content",
+                "type": "string",
+                "acceptVariable": true,
+                "rows": 4
+              }
+            ],
+            "id": "agentAgentflow_3-input-agentMessages"
+          },
+          {
+            "label": "Built-In OpenAI Tools",
+            "name": "agentToolsBuiltInOpenAI",
+            "type": "multiOptions",
+            "options": [
+              {
+                "label": "Web Search Preview",
+                "name": "web_search_preview"
+              },
+              {
+                "label": "Code Interpreter",
+                "name": "code_interpreter"
+              },
+              {
+                "label": "Image Generation",
+                "name": "image_generation"
+              }
+            ],
+            "optional": true,
+            "show": {
+              "agentModel": "chatOpenAI"
+            },
+            "id": "agentAgentflow_3-input-agentToolsBuiltInOpenAI"
+          },
+          {
+            "label": "Tools",
+            "name": "agentTools",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentTools"
+          },
+          {
+            "label": "Knowledge (Document Stores)",
+            "name": "agentKnowledgeDocumentStores",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentKnowledgeDocumentStores"
+          },
+          {
+            "label": "Knowledge (Vector Store Embeddings)",
+            "name": "agentKnowledgeVSEmbeddings",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentKnowledgeVSEmbeddings"
+          },
+          {
+            "label": "Enable Memory",
+            "name": "agentEnableMemory",
+            "type": "boolean",
+            "default": true,
+            "id": "agentAgentflow_3-input-agentEnableMemory"
+          },
+          {
+            "label": "Memory Type",
+            "name": "agentMemoryType",
+            "type": "options",
+            "options": [
+              {
+                "label": "All Messages",
+                "name": "allMessages"
+              },
+              {
+                "label": "Window Size",
+                "name": "windowSize"
+              },
+              {
+                "label": "Conversation Summary",
+                "name": "conversationSummary"
+              },
+              {
+                "label": "Conversation Summary Buffer",
+                "name": "conversationSummaryBuffer"
+              }
+            ],
+            "default": "allMessages",
+            "id": "agentAgentflow_3-input-agentMemoryType"
+          },
+          {
+            "label": "User Message",
+            "name": "agentUserMessage",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "acceptVariable": true,
+            "show": {
+              "agentEnableMemory": true
+            },
+            "id": "agentAgentflow_3-input-agentUserMessage"
+          },
+          {
+            "label": "Return Response As",
+            "name": "agentReturnResponseAs",
+            "type": "options",
+            "options": [
+              {
+                "label": "User Message",
+                "name": "userMessage"
+              },
+              {
+                "label": "Assistant Message",
+                "name": "assistantMessage"
+              }
+            ],
+            "default": "userMessage",
+            "id": "agentAgentflow_3-input-agentReturnResponseAs"
+          },
+          {
+            "label": "Structured Output",
+            "name": "agentStructuredOutput",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentStructuredOutput"
+          },
+          {
+            "label": "Update State",
+            "name": "agentUpdateState",
+            "type": "array",
+            "optional": true,
+            "id": "agentAgentflow_3-input-agentUpdateState"
+          }
+        ],
+        "inputs": {
+          "agentModel": "chatOpenAI",
+          "agentMessages": [],
+          "agentToolsBuiltInOpenAI": [],
+          "agentTools": [
+            {
+              "agentSelectedTool": "customMCP",
+              "agentSelectedToolConfig": {
+                "mcpServerConfig": "{\"url\":\"http://host.docker.internal:8080/verticals/mcp\",\"headers\":{\"Authorization\":\"Basic YWRtaW46YWRtaW4=\",\"Accept\":\"application/json, text/event-stream\"}}",
+                "mcpActions": "[\"denodo_verticals_query_financial_rates\"]"
+              }
+            }
+          ],
+          "agentKnowledgeDocumentStores": [],
+          "agentKnowledgeVSEmbeddings": [],
+          "agentEnableMemory": true,
+          "agentMemoryType": "allMessages",
+          "agentUserMessage": "You are the Risk Synthesizer - the final decision-maker in an autonomous loan decision workflow.\nYour job is to read the outputs of the three prior agents and produce a definitive Loan Decision Brief.\n\n## Your Scope\nYou synthesize. Do NOT re-query credit, payment, or property data.\nYour only tool call is to fetch the current rate.\n\n## Your Task\nStep 1 - Read the CREDIT_ANALYSIS, PAYMENT_ANALYSIS, and PROPERTY_ANALYSIS blocks from the conversation history.\n\nStep 2 - Fetch the best available mortgage rate. Call query_financial_rates with no arguments (returns all rates).\nPick the row where loan_type = 'Mortgage' with the lowest interest_rate.\n\nStep 3 - Apply decision logic:\n\nAPPROVE if ALL of:\n- credit_verdict is STRONG or ACCEPTABLE\n- payment_verdict is STRONG or ACCEPTABLE\n- property_verdict is STRONG or ACCEPTABLE\n- ltv_ratio < 90%\n\nDECLINE if ANY of:\n- credit_verdict is WEAK\n- payment_verdict is HIGH RISK\n- ltv_ratio > 95%\n\nREFER TO UNDERWRITER if anything in between (mixed signals, missing data, borderline LTV, any INSUFFICIENT_DATA verdict).\n\n## Output Format\n\n==============================\nLOAN DECISION BRIEF\n==============================\nCustomer:         [full_name] | ID: [customer_id] | Tier: [loyalty_tier]\nRequested Amount: $[loan_amount] | Rate on File: [interest_rate]%\n\nCREDIT ANALYSIS\n  Credit Score:      [credit_score] ([band])\n  Employment:        [employment_history]\n  Financial History: [financial_history]\n\nPAYMENT HISTORY\n  Payment Reliability: [payment_reliability]\n  Total Debt Exposure: $[total_debt_exposure]\n  Missed Payments:     [missed_payments]\n  DTI Flag:            [dti_flag]\n\nPROPERTY / COLLATERAL\n  Property Value:  $[property_value]\n  LTV Ratio:       [ltv_ratio]% ([ltv_risk])\n  Collateral Risk: [collateral_rating]\n\nDECISION\n  Outcome:         [APPROVE / DECLINE / REFER TO UNDERWRITER]\n  Suggested Rate:  [interest_rate]% ([loan_type], [term]yr)\n  Rationale:       [2-3 sentences citing the verdicts from all three agents]\n  Conditions:      [any conditions, or None]\n==============================\n\nThis decision brief was produced by 4 specialized agents working autonomously - each querying Denodo in real-time. Zero data copies, one trigger.\n\n## Hard Rules\n- Never fabricate data. Every field must come from tool results or prior agent outputs.\n- If any prior agent block is missing, state which data is absent and issue REFER TO UNDERWRITER.\n- Temperature is 0.",
+          "agentReturnResponseAs": "userMessage",
+          "agentStructuredOutput": [],
+          "agentUpdateState": [],
+          "cache": "",
+          "modelName": "gpt-4o",
+          "temperature": "0",
+          "streaming": true,
+          "allowImageUploads": "",
+          "reasoning": false,
+          "reasoningEffort": "medium",
+          "reasoningSummary": "auto",
+          "maxTokens": "",
+          "topP": "",
+          "frequencyPenalty": "",
+          "presencePenalty": "",
+          "timeout": "",
+          "strictToolCalling": "",
+          "stopSequence": "",
+          "basepath": "",
+          "baseOptions": "",
+          "agentModelConfig": {
+            "cache": "",
+            "modelName": "gpt-4o",
+            "temperature": "0",
+            "streaming": true,
+            "allowImageUploads": "",
+            "reasoning": false,
+            "reasoningEffort": "medium",
+            "reasoningSummary": "auto",
+            "maxTokens": "",
+            "topP": "",
+            "frequencyPenalty": "",
+            "presencePenalty": "",
+            "timeout": "",
+            "strictToolCalling": "",
+            "stopSequence": "",
+            "basepath": "",
+            "baseOptions": "",
+            "agentModel": "chatOpenAI"
+          }
+        },
+        "outputAnchors": [
+          {
+            "id": "agentAgentflow_3-output-agentAgentflow",
+            "label": "Agent",
+            "name": "agentAgentflow"
+          }
+        ],
+        "credential": "15acbf28-1c2b-4ea4-b596-c6dcb11a6cb9"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "startAgentflow_0-agentAgentflow_0",
+      "source": "startAgentflow_0",
+      "sourceHandle": "startAgentflow_0-output-startAgentflow",
+      "target": "agentAgentflow_0",
+      "targetHandle": "agentAgentflow_0",
+      "type": "agentFlow",
+      "data": {
+        "sourceColor": "#7EE787",
+        "targetColor": "#4DD0E1",
+        "isHumanInput": false
+      }
+    },
+    {
+      "id": "agentAgentflow_0-agentAgentflow_1",
+      "source": "agentAgentflow_0",
+      "sourceHandle": "agentAgentflow_0-output-agentAgentflow",
+      "target": "agentAgentflow_1",
+      "targetHandle": "agentAgentflow_1",
+      "type": "agentFlow",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DD0E1",
+        "isHumanInput": false
+      }
+    },
+    {
+      "id": "agentAgentflow_1-agentAgentflow_2",
+      "source": "agentAgentflow_1",
+      "sourceHandle": "agentAgentflow_1-output-agentAgentflow",
+      "target": "agentAgentflow_2",
+      "targetHandle": "agentAgentflow_2",
+      "type": "agentFlow",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DD0E1",
+        "isHumanInput": false
+      }
+    },
+    {
+      "id": "agentAgentflow_2-agentAgentflow_3",
+      "source": "agentAgentflow_2",
+      "sourceHandle": "agentAgentflow_2-output-agentAgentflow",
+      "target": "agentAgentflow_3",
+      "targetHandle": "agentAgentflow_3",
+      "type": "agentFlow",
+      "data": {
+        "sourceColor": "#4DD0E1",
+        "targetColor": "#4DD0E1",
+        "isHumanInput": false
+      }
+    }
+  ],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 0.75
+  }
+}

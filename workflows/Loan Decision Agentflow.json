@@ -1,0 +1,972 @@
+{
+  "nodes": [
+    {
+      "id": "seqStart_0",
+      "position": { "x": 100, "y": 300 },
+      "type": "agentNode",
+      "data": {
+        "id": "seqStart_0",
+        "label": "Start",
+        "version": 2,
+        "name": "seqStart",
+        "type": "SeqStart",
+        "baseClasses": ["SeqStart", "SeqAgentNode"],
+        "category": "Sequential Agents",
+        "description": "Starting point of the sequential agent flow. Receives the initial user message.",
+        "inputParams": [
+          {
+            "label": "Flow State",
+            "name": "startState",
+            "description": "Initial key-value state passed across all agents in the sequence.",
+            "type": "array",
+            "optional": true,
+            "acceptVariable": true,
+            "array": [
+              { "label": "Key", "name": "key", "type": "string" },
+              {
+                "label": "Value",
+                "name": "value",
+                "type": "string",
+                "acceptVariable": true
+              },
+              {
+                "label": "Type",
+                "name": "type",
+                "type": "options",
+                "options": [
+                  { "label": "String", "name": "string" },
+                  { "label": "Number", "name": "number" },
+                  { "label": "Boolean", "name": "boolean" },
+                  { "label": "Array", "name": "array" },
+                  { "label": "Object", "name": "object" }
+                ],
+                "default": "string"
+              }
+            ],
+            "id": "seqStart_0-input-startState-array",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "id": "seqStart_0-input-model-BaseChatModel"
+          },
+          {
+            "label": "Agent Memory",
+            "name": "agentMemory",
+            "type": "BaseCheckpointSaver",
+            "optional": true,
+            "id": "seqStart_0-input-agentMemory-BaseCheckpointSaver"
+          },
+          {
+            "label": "Input Moderation",
+            "description": "Detect text that could generate harmful output and prevent it from being sent to the language model.",
+            "name": "inputModeration",
+            "type": "Moderation",
+            "optional": true,
+            "list": true,
+            "id": "seqStart_0-input-inputModeration-Moderation"
+          }
+        ],
+        "inputs": {
+          "model": "{{chatOpenAI_0.data.instance}}",
+          "startState": []
+        },
+        "outputAnchors": [
+          {
+            "id": "seqStart_0-output-seqStart-SeqStart|SeqAgentNode",
+            "name": "seqStart",
+            "label": "Start",
+            "description": "Starting point of the sequential agent flow.",
+            "type": "SeqStart | SeqAgentNode"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 200,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 100, "y": 300 }
+    },
+    {
+      "id": "seqAgent_credit",
+      "position": { "x": 500, "y": 100 },
+      "type": "agentNode",
+      "data": {
+        "id": "seqAgent_credit",
+        "label": "Agent",
+        "version": 2,
+        "name": "seqAgent",
+        "type": "SeqAgent",
+        "baseClasses": ["SeqAgent", "SeqAgentNode"],
+        "category": "Sequential Agents",
+        "description": "Agent node — uses LLM and tools to complete an assigned task, then passes state to the next node.",
+        "inputParams": [
+          {
+            "label": "Agent Name",
+            "name": "agentName",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqAgent_credit-input-agentName-string",
+            "display": true
+          },
+          {
+            "label": "System Prompt",
+            "name": "systemMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "id": "seqAgent_credit-input-systemMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Human Message (Replace {input})",
+            "name": "humanMessagePrompt",
+            "type": "string",
+            "description": "Prompt to replace the human message. This is useful when you want to pass the human message to the agent with additional context.",
+            "rows": 4,
+            "optional": true,
+            "id": "seqAgent_credit-input-humanMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Additional Parameters",
+            "name": "additionalParams",
+            "type": "json",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_credit-input-additionalParams-json",
+            "display": true
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "seqAgent_credit-input-maxIterations-number",
+            "display": true
+          },
+          {
+            "label": "Interrupt?",
+            "name": "interrupt",
+            "type": "boolean",
+            "description": "Interrupt the flow and wait for human input before proceeding to the next agent node.",
+            "default": false,
+            "id": "seqAgent_credit-input-interrupt-boolean",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "seqAgent_credit-input-tools-Tool"
+          },
+          {
+            "label": "LLM",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "id": "seqAgent_credit-input-model-BaseChatModel"
+          },
+          {
+            "label": "Start | Agent | LLM | Condition | Loop",
+            "name": "seqAgent",
+            "type": "SeqAgent | SeqAgentNode",
+            "id": "seqAgent_credit-input-seqAgent-SeqAgent"
+          }
+        ],
+        "inputs": {
+          "agentName": "Credit Analyst",
+          "systemMessagePrompt": "You are the Credit Analyst agent in an autonomous loan decision workflow.\nYour job is to assess the creditworthiness of a specific customer using real-time data from Denodo.\n\n## Your Scope\nYou handle ONLY credit assessment. Do not assess payments, property, or make a final loan decision.\n\n## Your Task\nExtract the customer_id from the conversation. Then:\n1. Call denodo_verticals_get_view_schema for financial_underwriting and financial_customers to confirm column names.\n2. Query financial_underwriting joined with financial_loans to get: credit_score, employment_history, financial_history.\n3. Query financial_customers to get: loyalty_classification, income_band, risk_weighting.\n4. Classify credit score: 800+ Excellent, 740-799 Good, 670-739 Fair, <670 Poor.\n\n## Output Format\nEnd your turn with this block:\nCREDIT_ANALYSIS:\n  customer_id: [id]\n  credit_score: [score] ([band])\n  employment_history: [value]\n  financial_history: [value]\n  loyalty_tier: [loyalty_classification]\n  income_band: [income_band]\n  risk_weighting: [risk_weighting]\n  credit_verdict: [STRONG / ACCEPTABLE / WEAK / INSUFFICIENT_DATA]\n\n## Hard Rules\n- Never fabricate data. Every field must come from a tool result.\n- Always cite the view name that provided each piece of data.\n- Temperature is 0 — precision only.",
+          "interrupt": false,
+          "maxIterations": "10",
+          "tools": ["{{customMCP_credit.data.instance}}"]
+        },
+        "outputAnchors": [
+          {
+            "id": "seqAgent_credit-output-seqAgent-SeqAgent|SeqAgentNode",
+            "name": "seqAgent",
+            "label": "Agent",
+            "description": "Sequence the next node in the flow.",
+            "type": "SeqAgent | SeqAgentNode"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 500,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 500, "y": 100 }
+    },
+    {
+      "id": "seqAgent_payment",
+      "position": { "x": 900, "y": 100 },
+      "type": "agentNode",
+      "data": {
+        "id": "seqAgent_payment",
+        "label": "Agent",
+        "version": 2,
+        "name": "seqAgent",
+        "type": "SeqAgent",
+        "baseClasses": ["SeqAgent", "SeqAgentNode"],
+        "category": "Sequential Agents",
+        "description": "Agent node — uses LLM and tools to complete an assigned task, then passes state to the next node.",
+        "inputParams": [
+          {
+            "label": "Agent Name",
+            "name": "agentName",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqAgent_payment-input-agentName-string",
+            "display": true
+          },
+          {
+            "label": "System Prompt",
+            "name": "systemMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "id": "seqAgent_payment-input-systemMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Human Message (Replace {input})",
+            "name": "humanMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "id": "seqAgent_payment-input-humanMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Additional Parameters",
+            "name": "additionalParams",
+            "type": "json",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_payment-input-additionalParams-json",
+            "display": true
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "seqAgent_payment-input-maxIterations-number",
+            "display": true
+          },
+          {
+            "label": "Interrupt?",
+            "name": "interrupt",
+            "type": "boolean",
+            "default": false,
+            "id": "seqAgent_payment-input-interrupt-boolean",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "seqAgent_payment-input-tools-Tool"
+          },
+          {
+            "label": "LLM",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "id": "seqAgent_payment-input-model-BaseChatModel"
+          },
+          {
+            "label": "Start | Agent | LLM | Condition | Loop",
+            "name": "seqAgent",
+            "type": "SeqAgent | SeqAgentNode",
+            "id": "seqAgent_payment-input-seqAgent-SeqAgent"
+          }
+        ],
+        "inputs": {
+          "agentName": "Payment History Analyst",
+          "systemMessagePrompt": "You are the Payment History Analyst agent in an autonomous loan decision workflow.\nYour job is to assess payment reliability and existing debt obligations using real-time data from Denodo.\n\n## Your Scope\nYou handle ONLY payment history and debt load. Credit score was assessed by the prior agent — do not repeat it. Do not assess property or make a final decision.\n\n## Your Task\nUsing the customer_id from context:\n1. Call denodo_verticals_get_view_schema for financial_payments and financial_loans to confirm column names.\n2. Query financial_loans for all loans for this customer: loan_id, loan_amount, interest_rate, term, status.\n3. Query financial_payments for all payments linked to this customer's loans.\n4. Count missed or late payments if the data is available.\n5. Calculate total existing debt exposure (sum of loan amounts).\n6. Rate payment reliability: 0 missed = Reliable, 1-2 = Minor Concerns, 3+ = High Risk.\n\n## Output Format\nEnd your turn with this block:\nPAYMENT_ANALYSIS:\n  customer_id: [id]\n  total_loans: [count]\n  total_debt_exposure: $[sum]\n  active_loans: [count]\n  missed_payments: [count or UNKNOWN]\n  payment_reliability: [Reliable / Minor Concerns / High Risk / INSUFFICIENT_DATA]\n  dti_flag: [LOW / MEDIUM / HIGH / UNKNOWN]\n  payment_verdict: [STRONG / ACCEPTABLE / WEAK / INSUFFICIENT_DATA]\n\n## Hard Rules\n- Never fabricate data. Every field must come from a tool result.\n- Always cite the view name that provided each piece of data.\n- Temperature is 0 — precision only.",
+          "interrupt": false,
+          "maxIterations": "10",
+          "tools": ["{{customMCP_payment.data.instance}}"]
+        },
+        "outputAnchors": [
+          {
+            "id": "seqAgent_payment-output-seqAgent-SeqAgent|SeqAgentNode",
+            "name": "seqAgent",
+            "label": "Agent",
+            "description": "Sequence the next node in the flow.",
+            "type": "SeqAgent | SeqAgentNode"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 500,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 900, "y": 100 }
+    },
+    {
+      "id": "seqAgent_property",
+      "position": { "x": 1300, "y": 100 },
+      "type": "agentNode",
+      "data": {
+        "id": "seqAgent_property",
+        "label": "Agent",
+        "version": 2,
+        "name": "seqAgent",
+        "type": "SeqAgent",
+        "baseClasses": ["SeqAgent", "SeqAgentNode"],
+        "category": "Sequential Agents",
+        "description": "Agent node — uses LLM and tools to complete an assigned task, then passes state to the next node.",
+        "inputParams": [
+          {
+            "label": "Agent Name",
+            "name": "agentName",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqAgent_property-input-agentName-string",
+            "display": true
+          },
+          {
+            "label": "System Prompt",
+            "name": "systemMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "id": "seqAgent_property-input-systemMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Human Message (Replace {input})",
+            "name": "humanMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "id": "seqAgent_property-input-humanMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Additional Parameters",
+            "name": "additionalParams",
+            "type": "json",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_property-input-additionalParams-json",
+            "display": true
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "seqAgent_property-input-maxIterations-number",
+            "display": true
+          },
+          {
+            "label": "Interrupt?",
+            "name": "interrupt",
+            "type": "boolean",
+            "default": false,
+            "id": "seqAgent_property-input-interrupt-boolean",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "seqAgent_property-input-tools-Tool"
+          },
+          {
+            "label": "LLM",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "id": "seqAgent_property-input-model-BaseChatModel"
+          },
+          {
+            "label": "Start | Agent | LLM | Condition | Loop",
+            "name": "seqAgent",
+            "type": "SeqAgent | SeqAgentNode",
+            "id": "seqAgent_property-input-seqAgent-SeqAgent"
+          }
+        ],
+        "inputs": {
+          "agentName": "Property Analyst",
+          "systemMessagePrompt": "You are the Property Analyst agent in an autonomous loan decision workflow.\nYour job is to assess collateral quality by analyzing property data from Denodo.\n\n## Your Scope\nYou handle ONLY property and collateral assessment. Credit and payment were assessed by prior agents — do not repeat that work.\n\n## Your Task\nUsing the customer_id from context:\n1. Call denodo_verticals_get_view_schema for financial_properties and financial_loans to confirm column names.\n2. Query financial_loans for this customer to get property_id(s).\n3. Query financial_properties using those property_id(s) to get: property value, type, and any available fields.\n4. Calculate LTV = (loan_amount / property_value) x 100.\n   - LTV < 80% = Low Risk, 80-90% = Medium Risk, > 90% = High Risk.\n\n## Output Format\nEnd your turn with this block:\nPROPERTY_ANALYSIS:\n  customer_id: [id]\n  property_id: [id or N/A]\n  property_value: $[value or UNKNOWN]\n  loan_amount: $[value]\n  ltv_ratio: [%] ([LOW / MEDIUM / HIGH] risk)\n  property_type: [type or UNKNOWN]\n  collateral_rating: [STRONG / ACCEPTABLE / WEAK / INSUFFICIENT_DATA]\n  notes: [any material observations]\n\n## Hard Rules\n- Never fabricate data. Every field must come from a tool result.\n- LTV must be computed from actual values — never estimated.\n- Always cite the view name that provided each piece of data.\n- Temperature is 0 — precision only.",
+          "interrupt": false,
+          "maxIterations": "10",
+          "tools": ["{{customMCP_property.data.instance}}"]
+        },
+        "outputAnchors": [
+          {
+            "id": "seqAgent_property-output-seqAgent-SeqAgent|SeqAgentNode",
+            "name": "seqAgent",
+            "label": "Agent",
+            "description": "Sequence the next node in the flow.",
+            "type": "SeqAgent | SeqAgentNode"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 500,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 1300, "y": 100 }
+    },
+    {
+      "id": "seqAgent_synthesizer",
+      "position": { "x": 1700, "y": 100 },
+      "type": "agentNode",
+      "data": {
+        "id": "seqAgent_synthesizer",
+        "label": "Agent",
+        "version": 2,
+        "name": "seqAgent",
+        "type": "SeqAgent",
+        "baseClasses": ["SeqAgent", "SeqAgentNode"],
+        "category": "Sequential Agents",
+        "description": "Agent node — uses LLM and tools to complete an assigned task, then passes state to the next node.",
+        "inputParams": [
+          {
+            "label": "Agent Name",
+            "name": "agentName",
+            "type": "string",
+            "placeholder": "Agent",
+            "id": "seqAgent_synthesizer-input-agentName-string",
+            "display": true
+          },
+          {
+            "label": "System Prompt",
+            "name": "systemMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "id": "seqAgent_synthesizer-input-systemMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Human Message (Replace {input})",
+            "name": "humanMessagePrompt",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "id": "seqAgent_synthesizer-input-humanMessagePrompt-string",
+            "display": true
+          },
+          {
+            "label": "Additional Parameters",
+            "name": "additionalParams",
+            "type": "json",
+            "optional": true,
+            "additionalParams": true,
+            "id": "seqAgent_synthesizer-input-additionalParams-json",
+            "display": true
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "seqAgent_synthesizer-input-maxIterations-number",
+            "display": true
+          },
+          {
+            "label": "Interrupt?",
+            "name": "interrupt",
+            "type": "boolean",
+            "default": false,
+            "id": "seqAgent_synthesizer-input-interrupt-boolean",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "seqAgent_synthesizer-input-tools-Tool"
+          },
+          {
+            "label": "LLM",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "id": "seqAgent_synthesizer-input-model-BaseChatModel"
+          },
+          {
+            "label": "Start | Agent | LLM | Condition | Loop",
+            "name": "seqAgent",
+            "type": "SeqAgent | SeqAgentNode",
+            "id": "seqAgent_synthesizer-input-seqAgent-SeqAgent"
+          }
+        ],
+        "inputs": {
+          "agentName": "Risk Synthesizer",
+          "systemMessagePrompt": "You are the Risk Synthesizer agent — the final decision-maker in an autonomous loan decision workflow.\nYour job is to read the outputs of the three prior agents and produce a definitive Loan Decision Brief.\n\n## Your Scope\nYou synthesize. Do NOT re-query data that prior agents already collected. Your only new tool call is to fetch current rates.\n\n## Your Task\n1. Extract from conversation history:\n   - CREDIT_ANALYSIS block\n   - PAYMENT_ANALYSIS block\n   - PROPERTY_ANALYSIS block\n2. Call denodo_verticals_get_view_schema for financial_rates.\n3. Query financial_rates: SELECT * FROM financial_rates ORDER BY interest_rate ASC\n4. Apply decision logic:\n   APPROVE if ALL: credit_verdict STRONG/ACCEPTABLE, payment_verdict STRONG/ACCEPTABLE, collateral_rating STRONG/ACCEPTABLE, ltv < 90%\n   DECLINE if ANY: credit_verdict WEAK/INSUFFICIENT, payment HIGH RISK, ltv > 95%, 3+ WEAK signals\n   REFER TO UNDERWRITER: everything else (mixed signals, missing data, borderline)\n5. Select the best rate from financial_rates for the loan type and term.\n\n## Output Format\nProduce the full Loan Decision Brief:\n\n==============================\nLOAN DECISION BRIEF\n==============================\nCustomer: [name] | ID: [id] | Tier: [loyalty]\nRequested Amount: $[amount] | Term: [term] years\n\nCREDIT ANALYSIS\n  Credit Score: [score] ([band])\n  Employment: [employment_history]\n  Financial History: [financial_history]\n\nPAYMENT HISTORY\n  Payment Reliability: [value]\n  Total Debt Exposure: $[value]\n  Missed Payments: [value]\n  DTI Flag: [value]\n\nPROPERTY / COLLATERAL\n  Property Value: $[value]\n  LTV Ratio: [value]% ([risk])\n  Collateral Risk: [value]\n\nDECISION\n  Outcome: [APPROVE / DECLINE / REFER TO UNDERWRITER]\n  Suggested Rate: [rate]% ([loan_type], [term]yr)\n  Rationale: [2-3 sentences citing verdicts from all three prior agents]\n  Conditions: [conditions or None]\n==============================\n\nTell the audience: This decision brief was produced by 4 specialized agents working autonomously — each querying Denodo in real-time. Zero data copies, one trigger.\n\n## Hard Rules\n- Never fabricate data. Every field must trace to tool results or prior agent outputs.\n- Decision must be justified by citing verdicts from all three prior agents.\n- If any prior agent block is missing, issue a REFER decision and state which data is absent.\n- Temperature is 0 — this is a financial decision.",
+          "interrupt": false,
+          "maxIterations": "10",
+          "tools": ["{{customMCP_synthesizer.data.instance}}"]
+        },
+        "outputAnchors": [
+          {
+            "id": "seqAgent_synthesizer-output-seqAgent-SeqAgent|SeqAgentNode",
+            "name": "seqAgent",
+            "label": "Agent",
+            "description": "Sequence the next node in the flow.",
+            "type": "SeqAgent | SeqAgentNode"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 500,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 1700, "y": 100 }
+    },
+    {
+      "id": "seqEnd_0",
+      "position": { "x": 2100, "y": 300 },
+      "type": "agentNode",
+      "data": {
+        "id": "seqEnd_0",
+        "label": "End",
+        "version": 1,
+        "name": "seqEnd",
+        "type": "SeqEnd",
+        "baseClasses": ["SeqEnd", "SeqAgentNode"],
+        "category": "Sequential Agents",
+        "description": "End node of the sequential agent flow. Returns the final output.",
+        "inputParams": [
+          {
+            "label": "End Output",
+            "name": "endOutput",
+            "type": "options",
+            "options": [
+              { "label": "Using Last Agent Reasoning", "name": "lastNode" },
+              { "label": "Custom", "name": "custom" }
+            ],
+            "default": "lastNode",
+            "id": "seqEnd_0-input-endOutput-options",
+            "display": true
+          },
+          {
+            "label": "Custom End Message",
+            "name": "customEndMessage",
+            "type": "string",
+            "rows": 4,
+            "optional": true,
+            "show": { "endOutput": "custom" },
+            "id": "seqEnd_0-input-customEndMessage-string",
+            "display": false
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Agent | Condition",
+            "name": "seqAgent",
+            "type": "SeqAgent | SeqAgentNode",
+            "id": "seqEnd_0-input-seqAgent-SeqAgent"
+          }
+        ],
+        "inputs": {
+          "endOutput": "lastNode"
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 200,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 2100, "y": 300 }
+    },
+    {
+      "id": "chatOpenAI_0",
+      "position": { "x": 100, "y": -200 },
+      "type": "customNode",
+      "data": {
+        "id": "chatOpenAI_0",
+        "label": "OpenAI",
+        "version": 8.3,
+        "name": "chatOpenAI",
+        "type": "ChatOpenAI",
+        "baseClasses": ["ChatOpenAI", "BaseChatOpenAI", "BaseChatModel", "BaseLanguageModel", "Runnable"],
+        "category": "Chat Models",
+        "description": "Wrapper around OpenAI large language models that use the Chat endpoint",
+        "inputParams": [
+          {
+            "label": "Connect Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": ["openAIApi"],
+            "id": "chatOpenAI_0-input-credential-credential",
+            "display": true
+          },
+          {
+            "label": "Model Name",
+            "name": "modelName",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "default": "gpt-4o-mini",
+            "id": "chatOpenAI_0-input-modelName-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Temperature",
+            "name": "temperature",
+            "type": "number",
+            "step": 0.1,
+            "default": 0,
+            "optional": true,
+            "id": "chatOpenAI_0-input-temperature-number",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "modelName": "gpt-4o",
+          "temperature": 0
+        },
+        "outputAnchors": [
+          {
+            "id": "chatOpenAI_0-output-chatOpenAI-ChatOpenAI|BaseChatOpenAI|BaseChatModel|BaseLanguageModel|Runnable",
+            "name": "chatOpenAI",
+            "label": "ChatOpenAI",
+            "type": "ChatOpenAI | BaseChatOpenAI | BaseChatModel | BaseLanguageModel | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 280,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 100, "y": -200 }
+    },
+    {
+      "id": "customMCP_credit",
+      "position": { "x": 500, "y": -200 },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_credit",
+        "label": "Custom MCP Tool",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Tool",
+        "baseClasses": ["Tool"],
+        "category": "Tools",
+        "description": "MCP tools for Credit Analyst: underwriting and customer data",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "json",
+            "id": "customMCP_credit-input-mcpServerConfig-json",
+            "display": true
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_credit-input-mcpActions-asyncMultiOptions",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  \"url\": \"http://host.docker.internal:8080/verticals/mcp\",\n  \"headers\": {\n    \"Authorization\": \"Basic YWRtaW46YWRtaW4=\"\n  }\n}",
+          "mcpActions": "[\"denodo_verticals_get_view_schema\",\"denodo_verticals_query_financial_customers\",\"denodo_verticals_query_financial_underwriting\",\"denodo_verticals_run_sql_query\",\"denodo_verticals_validate_sql_query\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_credit-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 400,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 500, "y": -200 }
+    },
+    {
+      "id": "customMCP_payment",
+      "position": { "x": 900, "y": -200 },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_payment",
+        "label": "Custom MCP Tool",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Tool",
+        "baseClasses": ["Tool"],
+        "category": "Tools",
+        "description": "MCP tools for Payment History Analyst: payments and loans",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "json",
+            "id": "customMCP_payment-input-mcpServerConfig-json",
+            "display": true
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_payment-input-mcpActions-asyncMultiOptions",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  \"url\": \"http://host.docker.internal:8080/verticals/mcp\",\n  \"headers\": {\n    \"Authorization\": \"Basic YWRtaW46YWRtaW4=\"\n  }\n}",
+          "mcpActions": "[\"denodo_verticals_get_view_schema\",\"denodo_verticals_query_financial_payments\",\"denodo_verticals_query_financial_loans\",\"denodo_verticals_run_sql_query\",\"denodo_verticals_validate_sql_query\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_payment-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 400,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 900, "y": -200 }
+    },
+    {
+      "id": "customMCP_property",
+      "position": { "x": 1300, "y": -200 },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_property",
+        "label": "Custom MCP Tool",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Tool",
+        "baseClasses": ["Tool"],
+        "category": "Tools",
+        "description": "MCP tools for Property Analyst: properties and loans",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "json",
+            "id": "customMCP_property-input-mcpServerConfig-json",
+            "display": true
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_property-input-mcpActions-asyncMultiOptions",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  \"url\": \"http://host.docker.internal:8080/verticals/mcp\",\n  \"headers\": {\n    \"Authorization\": \"Basic YWRtaW46YWRtaW4=\"\n  }\n}",
+          "mcpActions": "[\"denodo_verticals_get_view_schema\",\"denodo_verticals_query_financial_properties\",\"denodo_verticals_query_financial_loans\",\"denodo_verticals_run_sql_query\",\"denodo_verticals_validate_sql_query\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_property-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 400,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 1300, "y": -200 }
+    },
+    {
+      "id": "customMCP_synthesizer",
+      "position": { "x": 1700, "y": -200 },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_synthesizer",
+        "label": "Custom MCP Tool",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Tool",
+        "baseClasses": ["Tool"],
+        "category": "Tools",
+        "description": "MCP tools for Risk Synthesizer: rates only",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "json",
+            "id": "customMCP_synthesizer-input-mcpServerConfig-json",
+            "display": true
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_synthesizer-input-mcpActions-asyncMultiOptions",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  \"url\": \"http://host.docker.internal:8080/verticals/mcp\",\n  \"headers\": {\n    \"Authorization\": \"Basic YWRtaW46YWRtaW4=\"\n  }\n}",
+          "mcpActions": "[\"denodo_verticals_get_view_schema\",\"denodo_verticals_query_financial_rates\",\"denodo_verticals_run_sql_query\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_synthesizer-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 400,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": { "x": 1700, "y": -200 }
+    }
+  ],
+  "edges": [
+    {
+      "source": "chatOpenAI_0",
+      "sourceHandle": "chatOpenAI_0-output-chatOpenAI-ChatOpenAI|BaseChatOpenAI|BaseChatModel|BaseLanguageModel|Runnable",
+      "target": "seqStart_0",
+      "targetHandle": "seqStart_0-input-model-BaseChatModel",
+      "type": "buttonedge",
+      "id": "chatOpenAI_0-seqStart_0"
+    },
+    {
+      "source": "seqStart_0",
+      "sourceHandle": "seqStart_0-output-seqStart-SeqStart|SeqAgentNode",
+      "target": "seqAgent_credit",
+      "targetHandle": "seqAgent_credit-input-seqAgent-SeqAgent",
+      "type": "buttonedge",
+      "id": "seqStart_0-seqAgent_credit"
+    },
+    {
+      "source": "customMCP_credit",
+      "sourceHandle": "customMCP_credit-output-customMCP-Tool",
+      "target": "seqAgent_credit",
+      "targetHandle": "seqAgent_credit-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_credit-seqAgent_credit"
+    },
+    {
+      "source": "seqAgent_credit",
+      "sourceHandle": "seqAgent_credit-output-seqAgent-SeqAgent|SeqAgentNode",
+      "target": "seqAgent_payment",
+      "targetHandle": "seqAgent_payment-input-seqAgent-SeqAgent",
+      "type": "buttonedge",
+      "id": "seqAgent_credit-seqAgent_payment"
+    },
+    {
+      "source": "customMCP_payment",
+      "sourceHandle": "customMCP_payment-output-customMCP-Tool",
+      "target": "seqAgent_payment",
+      "targetHandle": "seqAgent_payment-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_payment-seqAgent_payment"
+    },
+    {
+      "source": "seqAgent_payment",
+      "sourceHandle": "seqAgent_payment-output-seqAgent-SeqAgent|SeqAgentNode",
+      "target": "seqAgent_property",
+      "targetHandle": "seqAgent_property-input-seqAgent-SeqAgent",
+      "type": "buttonedge",
+      "id": "seqAgent_payment-seqAgent_property"
+    },
+    {
+      "source": "customMCP_property",
+      "sourceHandle": "customMCP_property-output-customMCP-Tool",
+      "target": "seqAgent_property",
+      "targetHandle": "seqAgent_property-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_property-seqAgent_property"
+    },
+    {
+      "source": "seqAgent_property",
+      "sourceHandle": "seqAgent_property-output-seqAgent-SeqAgent|SeqAgentNode",
+      "target": "seqAgent_synthesizer",
+      "targetHandle": "seqAgent_synthesizer-input-seqAgent-SeqAgent",
+      "type": "buttonedge",
+      "id": "seqAgent_property-seqAgent_synthesizer"
+    },
+    {
+      "source": "customMCP_synthesizer",
+      "sourceHandle": "customMCP_synthesizer-output-customMCP-Tool",
+      "target": "seqAgent_synthesizer",
+      "targetHandle": "seqAgent_synthesizer-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_synthesizer-seqAgent_synthesizer"
+    },
+    {
+      "source": "seqAgent_synthesizer",
+      "sourceHandle": "seqAgent_synthesizer-output-seqAgent-SeqAgent|SeqAgentNode",
+      "target": "seqEnd_0",
+      "targetHandle": "seqEnd_0-input-seqAgent-SeqAgent",
+      "type": "buttonedge",
+      "id": "seqAgent_synthesizer-seqEnd_0"
+    }
+  ],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 0.6
+  }
+}

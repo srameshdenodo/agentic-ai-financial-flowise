@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.langflow.org)",
+      "WebSearch",
+      "WebFetch(domain:docs.flowiseai.com)",
+      "Bash(curl -s -X POST http://localhost:8080/verticals/mcp -H \"Content-Type: application/json\" -H \"Authorization: Basic YWRtaW46YWRtaW4=\" -d '{\"\"\"\"jsonrpc\"\"\"\":\"\"\"\"2.0\"\"\"\",\"\"\"\"id\"\"\"\":1,\"\"\"\"method\"\"\"\":\"\"\"\"initialize\"\"\"\",\"\"\"\"params\"\"\"\":{\"\"\"\"protocolVersion\"\"\"\":\"\"\"\"2024-11-05\"\"\"\",\"\"\"\"capabilities\"\"\"\":{},\"\"\"\"clientInfo\"\"\"\":{\"\"\"\"name\"\"\"\":\"\"\"\"claude-code\"\"\"\",\"\"\"\"version\"\"\"\":\"\"\"\"1.0\"\"\"\"}}}')",
+      "Bash(curl -sv -X POST http://localhost:8080/verticals/mcp -H \"Content-Type: application/json\" -H \"Authorization: Basic YWRtaW46YWRtaW4=\" -d '{\"\"\"\"jsonrpc\"\"\"\":\"\"\"\"2.0\"\"\"\",\"\"\"\"id\"\"\"\":1,\"\"\"\"method\"\"\"\":\"\"\"\"initialize\"\"\"\",\"\"\"\"params\"\"\"\":{\"\"\"\"protocolVersion\"\"\"\":\"\"\"\"2024-11-05\"\"\"\",\"\"\"\"capabilities\"\"\"\":{},\"\"\"\"clientInfo\"\"\"\":{\"\"\"\"name\"\"\"\":\"\"\"\"claude-code\"\"\"\",\"\"\"\"version\"\"\"\":\"\"\"\"1.0\"\"\"\"}}}')",
+      "Bash(docker ps:*)",
+      "Bash(curl:*)",
+      "Bash(grep -v '\\\\$search')",
+      "Read(//tmp/**)",
+      "Bash(npm install:*)",
+      "Bash(docker compose:*)",
+      "Bash(node -e \"const d=require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\); const nodes=JSON.parse\\(d\\); const mcp=nodes.filter\\(n=>n.name&&n.name.toLowerCase\\(\\).includes\\(''''mcp''''\\)\\); console.log\\(mcp.map\\(n=>n.name\\)\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(node -e \"const r=require\\(process.env.USERPROFILE+''/fw_login.json''\\); console.log\\(Object.keys\\(r\\)\\); console.log\\(r.accessToken?r.accessToken.substring\\(0,40\\)+''...'':''no token''\\)\")",
+      "Bash(node:*)",
+      "Bash(docker exec:*)",
+      "mcp__denodo__denodo_verticals_query_financial_customers",
+      "mcp__denodo__denodo_verticals_query_customer_complaints",
+      "mcp__denodo__denodo_verticals_query_financial_loans",
+      "mcp__denodo__denodo_verticals_query_officer_transcripts",
+      "mcp__denodo__denodo_verticals_query_financial_rates",
+      "mcp__denodo__denodo_verticals_get_view_schema",
+      "mcp__denodo__denodo_verticals_run_sql_query",
+      "Bash(bash \"C:\\\\Senthil\\\\Projects\\\\agentic-ai-financial-flow\\\\.claude\\\\sentinel\\\\scanner.sh\" 2>&1)",
+      "Bash(bash \"C:/Senthil/Projects/agentic-ai-financial-flow/.claude/sentinel/scanner.sh\" 2>&1)",
+      "Bash(MSYS_NO_PATHCONV=1 docker exec flowise node -e \"\nconst fs = require\\('fs'\\);\nconst src = fs.readFileSync\\('/usr/local/lib/node_modules/flowise/dist/utils/buildAgentflow.js', 'utf8'\\);\n// Find all agentflow node name references\nconst matches = src.match\\(/data\\\\.name\\\\s*===?\\\\s*['\\\\\"][a-zA-Z]+Agentflow['\\\\\"]|name:\\\\s*['\\\\\"][a-zA-Z]+Agentflow['\\\\\"]/g\\);\nconst unique = [...new Set\\(matches\\)];\nconsole.log\\('Node names:', unique\\);\n\")",
+      "Bash(python3:*)",
+      "WebFetch(domain:community.denodo.com)",
+      "Bash(find /Senthil/Projects/agentic-ai-financial-flow -type f \\\\\\(-name *.js -o -name *.ts -o -name *.json \\\\\\))",
+      "Bash(find /Senthil/Projects/agentic-ai-financial-flow -type f \\\\\\(-name *.js -o -name *.ts \\\\\\))",
+      "Bash(xargs grep:*)",
+      "Bash(sh .claude/sentinel/scanner.sh)",
+      "Bash(ls \"C:\\\\Senthil\\\\Projects\\\\agentic-ai-financial-flow\\\\agents\"\" && ls \"C:SenthilProjectsagentic-ai-financial-flow\"\")",
+      "Bash(git init:*)",
+      "Bash(git branch:*)",
+      "Bash(gh repo:*)",
+      "Bash(\"C:/Senthil/Projects/agentic-ai-financial-flow/.gitignore\":*)"
+    ]
+  }
+}
